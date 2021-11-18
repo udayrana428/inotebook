@@ -4,8 +4,9 @@ const router = express.Router()
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const jwt_secret = "hello23@"
+const fetchuser=require("../middleware/getuser")
 const { body, validationResult } = require('express-validator');
-// create a user using POST: "/api/auth/createUser" no login required
+//ROUTE.1) create a user using POST: "/api/auth/createUser" no login required
 router.post('/createUser', [
   body('email', 'Enter a valid email').isEmail(),
   body('name', 'Enter a valid name').isLength({ min: 2, max: 20 }),
@@ -44,7 +45,7 @@ router.post('/createUser', [
     res.status(500).send("some error occured!")
   }
 })
-// create a login endpoint using POST: "/api/auth/login" login required
+//ROUTE.2) create a login endpoint using POST: "/api/auth/login" login required
 router.post('/login', [
   body('email','Enter a valid email').isEmail(),
   body('password','Enter correct password').isLength({ min: 5 }),
@@ -76,7 +77,16 @@ router.post('/login', [
   }
 
 })
-let a1="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE5NTBkZDU2ZDJiYTgwNjFmYjgyMjkwIn0sImlhdCI6MTYzNzE1ODM1N30.hTDalIdc9-16wHXuwwmwTClx4O2kmT2AuqwcJg8_Y9g"
-let a2="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE5NTBkZDU2ZDJiYTgwNjFmYjgyMjkwIn0sImlhdCI6MTYzNzE1ODQ5Mn0.3H9eLvOAoDy5aO2d3nGZyikRVxxS-hu3svjIe5QRSmA"
-console.log(a1==a2)
+//ROUTE.3) create a getuser endpoint using POST: "/api/auth/getuser" login required
+router.post('/getuser',fetchuser,async(req,res)=>{
+  try{
+    userId=req.user.id
+    const user=await User.findById(userId).select("-password")
+    res.send(user)
+  }
+  catch(error){
+    console.error(error.message)
+    res.status(400).send("Unauthorised access")
+  }
+})
 module.exports = router
