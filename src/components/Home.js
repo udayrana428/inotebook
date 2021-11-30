@@ -1,9 +1,11 @@
-import React from 'react'
+import {React,useContext} from 'react'
+import Notes from './Notes'
 
 const Home = () => {
+    
     return (
         <>
-        <h1>This is my iNotebook app</h1>
+        <Notes/>
         </>
     )
 }
