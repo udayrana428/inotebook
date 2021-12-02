@@ -113,7 +113,10 @@ const NoteState = (props) => {
     }
     // DELETE NOTE
     const deleteNote=(id)=>{
-        
+        // TODO: API CALL
+        console.log("deleted" , id)
+        const newNote=notes.filter((note)=>{return note._id!=id})
+        setnotes(newNote)
     }
     // EDIT NOTE
     const editNote=(id)=>{
